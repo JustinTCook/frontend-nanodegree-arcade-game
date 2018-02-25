@@ -1,27 +1,67 @@
-// Possible board positions
-const xPositions = [200];
-const yPositions = [];
+// Board positions for enemies
+const yPositions = [230, 140, 60];
+const boardWidth = 505;
+const boardHeight = 606;
 
 // Enemies our player must avoid
 class Enemy {
+
   constructor(x, y){
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
     this.sprite = 'images/enemy-bug.png';
+
     this.x = x;
     this.y = y;
+
+    this.width = 70;
+    this.height = 40;
+
+    this.speedMultiplier = 40;
+    this.randomSpeed();
   }
 
   // Update the enemy's position, required method for game
   // Parameter: dt, a time delta between ticks
   update(dt){
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    // Check if enemy has moved off board
+    if (this.x < boardWidth) {
+      // Multiply movement by dt parameter to ensure game runs
+      // at same speed for all computers.
+        this.x += (this.speed * dt);
+    }
+    else {
+      this.reset();
+    }
   }
 
   render(){
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  }
+
+  // Reset position and choose random path and speed.
+  reset(){
+    let yPathIndex = Math.floor(Math.random() * Math.floor(3));
+    this.x = -90;
+    this.y = yPositions[yPathIndex];
+    this.randomSpeed();
+  }
+
+  // Assign random speed
+  randomSpeed(){
+    this.speed = this.speedMultiplier * Math.floor(Math.random() * 10 + 5);
+  }
+
+  // Taken from - https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+  checkCollisions(){
+    if (player.x < this.x + this.width &&
+        player.x + player.width > this.x &&
+        player.y < this.y + this.height &&
+        player.height + player.y > this.y) {
+          this.collisionDetected();
+      }
+  }
+
+  collisionDetected(){
+    player.reset();
   }
 }
 
@@ -31,16 +71,23 @@ class Enemy {
 class Player {
   constructor(sprite = 'images/char-boy.png'){
     this.sprite = sprite;
-    this.x = 202;
-    this.y = 320;
+
+    this.xPosStart = 202;
+    this.yPosStart = 320;
+
+    // Start new player at start positions
+    this.x = this.xPosStart;
+    this.y = this.yPosStart;
+
+    this.width = 50;
+    this.height = 50;
   }
 
-  // Update the player's position, required method for game
-  // Parameter: dt, a time delta between ticks
   update(dt){
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    // Reset player if they reach the finish line
+    if(this.y < 0){
+      this.reset();
+    }
   }
 
   render(){
@@ -48,9 +95,11 @@ class Player {
   }
 
   handleInput(keyPress){
-    var horizontal = 101;
+    // Center pixel positions of blocks
     var vertical = 83;
+    var horizontal = 101;
 
+    // Move player but keep them on board.
     if(keyPress == 'left' && this.x > 0) {
         this.x -= horizontal;
     }
@@ -64,12 +113,21 @@ class Player {
         this.y += vertical;
     }
   }
+
+  reset(){
+    this.x = this.xPosStart;
+    this.y = this.yPosStart;
+  }
 }
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
-const allEnemies = [new Enemy(), new Enemy()];
+let allEnemies = [];
+for(var i = 0; i < 3; i++){
+  allEnemies.push(new Enemy(-180, yPositions[i]));
+}
+
 // Place the player object in a variable called player
 const player = new Player();
 
