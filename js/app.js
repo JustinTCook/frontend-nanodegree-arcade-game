@@ -2,9 +2,9 @@
 'use strict';
 
 // Board positions for enemies
-const yPositions = [230, 140, 60];
-const boardWidth = 505;
-const boardHeight = 606;
+const Y_POSITIONS = [230, 140, 60];
+const BOARD_WIDTH = 505;
+const BOARD_HEIGHT = 606;
 
 // Enemies our player must avoid
 class Enemy {
@@ -26,7 +26,7 @@ class Enemy {
   // Parameter: dt, a time delta between ticks
   update(dt){
     // Check if enemy has moved off board
-    if (this.x < boardWidth) {
+    if (this.x < BOARD_WIDTH) {
       // Multiply movement by dt parameter to ensure game runs
       // at same speed for all computers.
         this.x += (this.speed * dt);
@@ -44,7 +44,7 @@ class Enemy {
   reset(){
     let yPathIndex = Math.floor(Math.random() * Math.floor(3));
     this.x = -90;
-    this.y = yPositions[yPathIndex];
+    this.y = Y_POSITIONS[yPathIndex];
     this.randomSpeed();
   }
 
@@ -128,7 +128,7 @@ class Player {
 // Place all enemy objects in an array called allEnemies
 let allEnemies = [];
 for(var i = 0; i < 3; i++){
-  allEnemies.push(new Enemy(-180, yPositions[i]));
+  allEnemies.push(new Enemy(-180, Y_POSITIONS[i]));
 }
 
 // Place the player object in a variable called player
