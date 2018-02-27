@@ -64,6 +64,8 @@ class Enemy {
   }
 
   collisionDetected(){
+    // Calling player.reset from here because we might
+    // add extra collision stuff later.
     player.reset();
   }
 }
@@ -87,10 +89,7 @@ class Player {
   }
 
   update(dt){
-    // Reset player if they reach the finish line
-    if(this.y < 0){
-      this.reset();
-    }
+
   }
 
   render(){
@@ -114,6 +113,11 @@ class Player {
     }
     if(keyPress == 'down' && this.y < 400) {
         this.y += vertical;
+    }
+
+    // Reset player if they reach the finish line
+    if(this.y < 0){
+      this.reset();
     }
   }
 
