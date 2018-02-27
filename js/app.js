@@ -1,3 +1,6 @@
+// Whole-script strict mode syntax
+'use strict';
+
 // Board positions for enemies
 const yPositions = [230, 140, 60];
 const boardWidth = 505;
